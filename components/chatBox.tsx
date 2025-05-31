@@ -12,6 +12,22 @@ interface Message {
 export default function ChatBox() {
     const [messages, setMessages] = useState<Message[]>([]);
     const messageEndRef = useRef<HTMLDivElement>(null);
+    const [conversationID, setConversationID] = useState<string>('');
+
+    useEffect(() => {
+        const generateConversationID = () => {
+            const now = new Date();
+            const date = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            
+            return `${date}${month}${year}_${hours}${minutes}`;
+        };
+        
+        setConversationID(generateConversationID());
+    }, []);
 
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({behavior:"smooth"});
@@ -19,6 +35,7 @@ export default function ChatBox() {
 
     const addMessage = (text: string, file?: File) => {
         console.log('addMessage called with:', text, file); // Debug log
+        console.log(conversationID);
         
         if (text.trim() || file) {
             const newMessage: Message = {
@@ -35,7 +52,25 @@ export default function ChatBox() {
                 return updated;
             });
             
-            // Add bot response logic here
+            // Call API
+            const formData = new FormData();
+            if (text) formData.append('message', text);
+            if (file) formData.append('file', file);
+
+            fetch('/api/chat', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                const botMessage: Message = {
+                    id: Date.now() + 1,
+                    text: data.message || 'Sorry, I couldn\'t process that.',
+                    sender: 'bot',
+                    timestamp: new Date()
+                };
+                setMessages(prev => [...prev, botMessage]);
+            });
         }
     };
 
