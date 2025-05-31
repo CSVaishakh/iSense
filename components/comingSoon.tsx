@@ -45,33 +45,35 @@ const ComingSoon: React.FC<ComingSoonProps> = ({
                     </div>
 
                     {/* Feature preview */}
-                    <div className="flex justify-center space-x-8 mb-8">
+                    <div className="flex justify-center items-center space-x-8 mb-8">
                         {features.map((feature, index) => (
                             <div 
                                 key={index}
-                                className="text-center animate-slide-in-up" 
+                                className="text-center animate-slide-in-up flex flex-col items-center" 
                                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                             >
-                                <div className="text-3xl mb-2">{feature.icon}</div>
+                                <div className="text-3xl mb-2 h-12 flex items-center justify-center">{feature.icon}</div>
                                 <span className="text-blue-300 text-sm">{feature.label}</span>
                             </div>
                         ))}
                     </div>
 
-                    {/* Floating icon */}
-                    <div className="animate-float" style={{ animationDelay: '0.6s' }}>
-                        <div className="relative">
-                            <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center shadow-2xl animate-pulse-slow mx-auto">
-                                <div className="text-white text-3xl">{mainIcon}</div>
+                    {/* Floating icon - properly centered */}
+                    <div className="flex justify-center mb-8">
+                        <div className="animate-float" style={{ animationDelay: '0.6s' }}>
+                            <div className="relative flex justify-center items-center">
+                                <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center shadow-2xl animate-pulse-slow">
+                                    <div className="text-white text-3xl">{mainIcon}</div>
+                                </div>
+                                <div className="absolute inset-0 w-24 h-24 border-2 border-blue-500/30 rounded-full animate-ping"></div>
+                                <div className="absolute -inset-1 w-26 h-26 border border-blue-400/20 rounded-full animate-pulse"></div>
                             </div>
-                            <div className="absolute inset-0 w-24 h-24 border-2 border-blue-500/30 rounded-full animate-ping"></div>
-                            <div className="absolute -inset-1 w-26 h-26 border border-blue-400/20 rounded-full animate-pulse"></div>
                         </div>
                     </div>
 
                     {/* Status message */}
                     {linkText && linkHref && (
-                        <div className="mt-8 animate-slide-in-up" style={{ animationDelay: '0.7s' }}>
+                        <div className="animate-slide-in-up" style={{ animationDelay: '0.7s' }}>
                             <p className="text-gray-500 text-sm">
                                 💡 {linkText} <a href={linkHref} className="text-blue-400 hover:text-blue-300 transition-colors underline">here</a>
                             </p>
