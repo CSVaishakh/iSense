@@ -114,19 +114,6 @@ iSense is an AI-powered image analysis platform that combines advanced computer 
 - `npm run start` - Start the production server
 - `npm run lint` - Run ESLint for code quality
 
-## 🎨 Key Components
-
-### [`ChatBox`](components/chatBox.tsx)
-Main chat interface that handles message display, image previews, and conversation flow.
-
-### [`InputBox`](components/InputBox.tsx)
-Input component for text messages and file uploads with drag-and-drop support.
-
-### [`Header`](components/header.tsx)
-Dynamic navigation component that adapts based on the current route and user authentication status.
-
-### API Route: [`/api/chat`](app/api/chat/route.ts)
-Handles image processing and AI-powered responses using the Groq SDK.
 
 ## 🔐 Authentication
 
