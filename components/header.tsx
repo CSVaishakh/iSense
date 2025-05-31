@@ -21,6 +21,9 @@ const HomeHeader: React.FC = () => {
             <h2 className="text-lg font-medium">About</h2>
           </Link>
           <SignedIn>
+            <Link href="/history" className="text-blue-500 hover:text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg">
+              <h2 className="text-lg font-medium">History</h2>
+            </Link>
             <div className="animate-bounce-in">
               <UserButton afterSignOutUrl="/" />
             </div>
