@@ -11,7 +11,7 @@ export async function generateDescription(imgUrl: string) {
             content:[
                 {
                     type: 'text',
-                    text: 'Describe the image, in not less than 30 words'
+                    text: 'Describe the image, in not less than 50 words'
                 },
                 {
                     type: 'image_url',

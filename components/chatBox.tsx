@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { useEffect, useRef, useState } from "react";
 import InputBox from "./InputBox";
@@ -7,6 +8,7 @@ interface Message {
     text: string;
     sender: 'user' | 'bot';
     timestamp?: Date;
+    file?: File; // Add file property
 }
 
 export default function ChatBox() {
@@ -50,6 +52,16 @@ export default function ChatBox() {
         }
     }, [messages]);
 
+    // Helper function to check if file is an image
+    const isImageFile = (file: File) => {
+        return file.type.startsWith('image/');
+    };
+
+    // Helper function to create image URL from file
+    const createImageURL = (file: File) => {
+        return URL.createObjectURL(file);
+    };
+
     const addMessage = (text: string, file?: File) => {
         console.log('addMessage called with:', text, file);
         console.log(conversationID);
@@ -57,9 +69,10 @@ export default function ChatBox() {
         if (text.trim() || file) {
             const newMessage: Message = {
                 id: Date.now(),
-                text: file ? `${text} [Attached: ${file.name}]` : text,
+                text: text || '',
                 sender: 'user',
-                timestamp: new Date()
+                timestamp: new Date(),
+                file: file // Add file to message object
             };
             
             console.log('Adding new message:', newMessage);
@@ -102,24 +115,43 @@ export default function ChatBox() {
     console.log('Current messages:', messages);
 
     return(
-        <div className="flex flex-col relative z-10" style={{ height: 'calc(100vh - 120px)' }}>
-            {/* Messages area with proper spacing for footer */}
-            <div className={`flex-1 overflow-y-auto transition-all duration-500 ${messages.length > 0 ? 'pt-4 px-4' : 'pt-20'} pb-24`}>
+        <div className="flex flex-col h-screen">
+            {/* Messages area - flexible height */}
+            <div className={`flex-1 overflow-y-auto transition-all duration-500 ${messages.length > 0 ? 'pt-20 px-4' : 'pt-32'}`}>
                 {messages.length > 0 && (
-                    <div className="space-y-4 pb-4">
+                    <div className="space-y-4 pb-6">
                         {messages.map((message: Message, index: number) => (
                             <div 
                                 key={message.id} 
-                                className={`${message.sender === 'user' ? 'flex justify-end' : 'flex justify-start'} animate-slide-in-up`}
+                                className={`${message.sender === 'user' ? 'flex justify-end mr-15' : 'flex justify-start ml-25'} animate-slide-in-up`}
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
-                                <div className={`px-4 py-3 max-w-2xl bg-gray-800 text-blue-400 break-words border border-gray-700 rounded-lg 
+                                <div className={`px-4 py-3 max-w-2xl bg-gray-800 text-blue-400 break-words border border-gray-700 rounded-lg whitespace-pre-wrap
                                     transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20
                                     ${message.sender === 'user' 
                                         ? 'hover:bg-gray-750 hover:border-blue-500/50' 
                                         : 'hover:bg-gray-750 hover:border-green-500/50 hover:text-green-400'
                                     }`}>
-                                    {message.text}
+                                    
+                                    {/* Image preview for user messages with uploaded images */}
+                                    {message.sender === 'user' && message.file && isImageFile(message.file) && (
+                                        <div className="mb-3">
+                                            <img 
+                                                src={createImageURL(message.file)} 
+                                                alt="Uploaded image"
+                                                className="max-w-full max-h-48 rounded-lg border border-gray-600 shadow-md hover:shadow-lg transition-shadow duration-200"
+                                                style={{ objectFit: 'contain' }}
+                                            />
+                                            <p className="text-xs text-gray-400 mt-1 opacity-70">
+                                                {message.file.name}
+                                            </p>
+                                        </div>
+                                    )}
+                                    
+                                    {/* Message text */}
+                                    {message.text && (
+                                        <div>{message.text}</div>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -143,8 +175,8 @@ export default function ChatBox() {
                 <div ref={messageEndRef} />
             </div>
             
-            {/* Floating input box - positioned above footer */}
-            <div className="fixed bottom-24 left-0 right-0 z-30 px-4">
+            {/* Input box - fixed at bottom with padding for separation */}
+            <div className="flex-shrink-0 p-4  from-gray-900/95 to-transparent">
                 <InputBox onSend={addMessage} />
             </div>
         </div>
