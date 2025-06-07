@@ -1,7 +1,7 @@
 import Groq from "groq-sdk";
 
 const groq = new Groq({
-    apiKey: "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",
+    apiKey: process.env.GROQ_API_KEY
 });
 
 export async function generateDescription(imgUrl: string) {

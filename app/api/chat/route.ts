@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         if(message && imgDescription === null) response = 'Hi,Please upload an image and ask questions';
         else if(message && imgDescription) response = await answerQuestion(imgDescription, message); 
         else if(!message && imgDescription) response = imgDescription 
-        else if(message && imgDescription) response = await answerQuestion(imgDescription, message); 
+        else if(message && imgDescription) response =imgDescription + await answerQuestion(imgDescription, message); 
 
         return NextResponse.json({message: response});
     }catch(error){
